@@ -1,3 +1,4 @@
+import os,shutil
 import json
 from torch import optim
 from model import *
@@ -12,11 +13,12 @@ X0 = dataset['X0']
 Y0 = dataset['Y0']
 
 hidden_size = 128
+
 encoder_f = EncoderRNN(hidden_size).to(device)  # 前向
 encoder_b = EncoderRNN(hidden_size).to(device)  # 逆向
 cls_layer = OutPutLayer(hidden_size, 2).to(device)
 
-learning_rate = 1e-3
+learning_rate = 0.0002
 encoder_optimizer = optim.Adam(encoder_f.parameters(), lr=learning_rate)
 encoder_optimizer2 = optim.Adam(encoder_b.parameters(), lr=learning_rate)
 cls_layer_optimizer = optim.Adam(cls_layer.parameters(), lr=learning_rate)
@@ -25,7 +27,7 @@ cls_layer_optimizer = optim.Adam(cls_layer.parameters(), lr=learning_rate)
 SOS_token = 0
 
 step = 0
-for epoch in range(100):
+for epoch in range(200):
     total_loss = 0
     for i in range(1000):
         index = random.randrange(0, len(X0))
@@ -72,16 +74,21 @@ for epoch in range(100):
         cls_layer_optimizer.step()
 
         total_loss += loss.item() / max_length
+        step = step + 1
         if i % 20 == 0:
             avg_loss = total_loss / (i+1)
             now_loss = loss.item() / max_length
-            step = step + 1
             writer.add_scalar("beat_cls_avg_loss/train", avg_loss, step)
             writer.add_scalar("beat_cls_now_loss/train", now_loss, step)
             print(f"Epoch: {epoch},i: {i},avg_loss:{avg_loss},loss:{now_loss}")
 
     # save models
-    torch.save(encoder_f, f"checkpoints/encoder_beat1.pth")
-    torch.save(encoder_b, f"checkpoints/encoder_beat2.pth")
-    torch.save(cls_layer, f"checkpoints/beat_cls_layer.pth")
+    dirpath = os.path.join("/content/drive/My Drive/Models/AI_beatmap_generator",str(epoch - 1))
+    os.mkdir(dirpath)
+    for item in os.listdir("/content/AI_beatmap_generator/checkpoints/"):
+        shutil.move(os.path.join("/content/AI_beatmap_generator/checkpoints/",item),dirpath)
+    torch.save(encoder_f, "/content/AI_beatmap_generator/checkpoints/encoder_beat1.pth")
+    torch.save(encoder_b, "/content/AI_beatmap_generator/checkpoints/encoder_beat2.pth")
+    torch.save(cls_layer, "/content/AI_beatmap_generator/checkpoints/beat_cls_layer.pth")
+    print("模型已保存：",epoch)
     writer.flush()
