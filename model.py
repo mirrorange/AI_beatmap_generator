@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import os
 import numpy as np
 
-device = torch.device("cpu")
+device = torch.device("cuda")
 
 Feature_DIM = 64
 
@@ -13,7 +13,6 @@ class EncoderRNN(nn.Module):
     def __init__(self, hidden_size):
         super(EncoderRNN, self).__init__()
         self.hidden_size = hidden_size
-
         self.gru = nn.GRU(Feature_DIM, hidden_size)
 
     def forward(self, input_, hidden):
