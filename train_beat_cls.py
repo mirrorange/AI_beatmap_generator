@@ -24,8 +24,8 @@ cls_layer_optimizer = optim.Adam(cls_layer.parameters(), lr=learning_rate)
 
 SOS_token = 0
 
-
-for epoch in range(20):
+step = 0
+for epoch in range(100):
     total_loss = 0
     for i in range(1000):
         index = random.randrange(0, len(X0))
@@ -75,8 +75,9 @@ for epoch in range(20):
         if i % 20 == 0:
             avg_loss = total_loss / (i+1)
             now_loss = loss.item() / max_length
-            writer.add_scalar("beat_cls_avg_loss/train", avg_loss, epoch)
-            writer.add_scalar("beat_cls_now_loss/train", now_loss, epoch)
+            step = step + 1
+            writer.add_scalar("beat_cls_avg_loss/train", avg_loss, step)
+            writer.add_scalar("beat_cls_now_loss/train", now_loss, step)
             print(f"Epoch: {epoch},i: {i},avg_loss:{avg_loss},loss:{now_loss}")
 
     # save models

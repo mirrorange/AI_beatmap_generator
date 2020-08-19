@@ -33,8 +33,8 @@ decoder_optimizer = optim.Adam(decoder.parameters(), lr=learning_rate)
 
 criterion = nn.NLLLoss()
 
-
-for epoch in range(100):
+step = 0
+for epoch in range(500):
     total_loss = 0
     for i in range(1000):
         index = random.randrange(0, len(X1))
@@ -76,8 +76,9 @@ for epoch in range(100):
         if i % 20 == 0:
             avg_loss = total_loss / (i+1)
             now_loss = loss.item() / max_length
-            writer.add_scalar("beat_decoder_avg_loss/train", avg_loss, epoch)
-            writer.add_scalar("beat_decoder_now_loss/train", now_loss, epoch)
+            step = step + 1
+            writer.add_scalar("beat_decoder_avg_loss/train", avg_loss, step)
+            writer.add_scalar("beat_decoder_now_loss/train", now_loss, step)
             print(f"Epoch: {epoch},i: {i},avg_loss:{avg_loss},loss:{now_loss}")
 
     # save models
