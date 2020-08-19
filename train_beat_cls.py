@@ -2,6 +2,9 @@ import json
 from torch import optim
 from model import *
 import random
+from torch.utils.tensorboard import SummaryWriter
+
+writer = SummaryWriter(log_dir="./log")
 
 with open("dataset.json", "r") as f:
     dataset = json.load(f)
@@ -72,9 +75,12 @@ for epoch in range(20):
         if i % 20 == 0:
             avg_loss = total_loss / (i+1)
             now_loss = loss.item() / max_length
+            writer.add_scalar("beat_cls_avg_loss/train", avg_loss, epoch)
+            writer.add_scalar("beat_cls_now_loss/train", now_loss, epoch)
             print(f"Epoch: {epoch},i: {i},avg_loss:{avg_loss},loss:{now_loss}")
 
     # save models
     torch.save(encoder_f, f"checkpoints/encoder_beat1.pth")
     torch.save(encoder_b, f"checkpoints/encoder_beat2.pth")
     torch.save(cls_layer, f"checkpoints/beat_cls_layer.pth")
+    writer.flush()
