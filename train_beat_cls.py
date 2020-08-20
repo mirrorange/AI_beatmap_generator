@@ -92,8 +92,8 @@ for epoch in range(epochnum):
     os.mkdir(backupdir)
     for item in os.listdir(savepath):
         shutil.move(os.path.join(savepath,item),backupdir)
-    torch.save(encoder_f, os.path.join(savepath,"/encoder_beat1.pth"))
-    torch.save(encoder_b, os.path.join(savepath,"/encoder_beat2.pth"))
-    torch.save(cls_layer, os.path.join(savepath,"/beat_cls_layer.pth"))
+    torch.save(encoder_f, os.path.join(savepath,"encoder_beat1.pth"))
+    torch.save(encoder_b, os.path.join(savepath,"encoder_beat2.pth"))
+    torch.save(cls_layer, os.path.join(savepath,"beat_cls_layer.pth"))
     print("模型已保存：",epoch)
     writer.flush()
