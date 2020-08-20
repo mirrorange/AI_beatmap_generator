@@ -7,12 +7,13 @@ from torch.utils.tensorboard import SummaryWriter
 
 savepath = sys.argv[1]
 backuppath = sys.argv[2]
-learning_rate = float(sys.argv[3])
-epochnum = int(sys.argv[4])
+datasetpath = sys.argv[3]
+learning_rate = float(sys.argv[4])
+epochnum = int(sys.argv[5])
 os.mkdir(os.path.join(backuppath,"ln_decoder"))
 writer = SummaryWriter(log_dir="./log")
 
-with open("dataset.json", "r") as f:
+with open(datasetpath, "r") as f:
     dataset = json.load(f)
 X3 = dataset['X3']
 Y3 = dataset['Y3']
