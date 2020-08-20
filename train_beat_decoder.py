@@ -1,4 +1,4 @@
-import os,shutil
+import sys,os,shutil
 import json
 from torch import optim
 import random
@@ -8,6 +8,7 @@ from torch.utils.tensorboard import SummaryWriter
 savepath = sys.argv[1]
 backuppath = sys.argv[2]
 learning_rate = float(sys.argv[3])
+epochnum = int(sys.argv[4])
 os.mkdir(os.path.join(backuppath,"ln_decoder"))
 writer = SummaryWriter(log_dir="./log")
 
@@ -38,7 +39,7 @@ decoder_optimizer = optim.Adam(decoder.parameters(), lr=learning_rate)
 criterion = nn.NLLLoss()
 
 step = 0
-for epoch in range(1000):
+for epoch in range(epochnum):
     total_loss = 0
     for i in range(1000):
         index = random.randrange(0, len(X1))
