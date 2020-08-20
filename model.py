@@ -92,7 +92,3 @@ def get_glove_embedding(classes, filename):
     print("embedding loaded.")
     return torch.FloatTensor(embedding_matrix)
 
-
-if not os.path.exists("checkpoints"):
-    os.mkdir("checkpoints")
-
