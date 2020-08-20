@@ -10,7 +10,7 @@ backuppath = sys.argv[2]
 datasetpath = sys.argv[3]
 learning_rate = float(sys.argv[4])
 epochnum = int(sys.argv[5])
-os.mkdir(os.path.join(backuppath,"ln_decoder"))
+os.mkdir(os.path.join(backuppath,"beat_cls"))
 writer = SummaryWriter(log_dir="./log")
 
 with open(datasetpath, "r") as f:
