@@ -1,12 +1,15 @@
-import os,shutil
+import sys,os,shutil
 import json
 from torch import optim
 import random
 from model import *
 from torch.utils.tensorboard import SummaryWriter
 
+savepath = sys.argv[1]
+backuppath = sys.argv[2]
+learning_rate = float(sys.argv[3])
+os.mkdir(os.path.join(backuppath,"ln_decoder"))
 writer = SummaryWriter(log_dir="./log")
-
 
 with open("dataset.json", "r") as f:
     dataset = json.load(f)
@@ -27,7 +30,6 @@ hidden_size = 128
 encoder = EncoderRNN(hidden_size).to(device)
 decoder = DecoderRNN(embedding, hidden_size, 16).to(device)  # 判断键型
 
-learning_rate = 0.0002
 encoder_optimizer = optim.Adam(encoder.parameters(), lr=learning_rate)
 decoder_optimizer = optim.Adam(decoder.parameters(), lr=learning_rate)
 
@@ -80,10 +82,11 @@ for epoch in range(1000):
             print(f"Epoch: {epoch},i: {i},avg_loss:{avg_loss},loss:{now_loss}")
 
     # save models
-    dirpath = os.path.join("/content/drive/My Drive/Models/AI_beatmap_generator",str(epoch - 1))
-    for item in os.listdir("/content/AI_beatmap_generator/checkpoints/"):
-        shutil.move(os.path.join("/content/AI_beatmap_generator/checkpoints/",item),dirpath)
-    torch.save(encoder, "/content/AI_beatmap_generator/checkpoints/ln_encoder.pth")
-    torch.save(decoder, "/content/AI_beatmap_generator/checkpoints/ln_decoder.pth")
+    backupdir = os.path.join(backuppath,"ln_decoder",str(epoch - 1))
+    os.mkdir(backupdir)
+    for item in os.listdir(savepath):
+        shutil.move(os.path.join(savepath,item),backupdir)
+    torch.save(encoder, os.path.join(savepath,"ln_encoder.pth"))
+    torch.save(decoder, os.path.join(savepath,"ln_decoder.pth"))
     print("模型已保存：",epoch)
     writer.flush()
