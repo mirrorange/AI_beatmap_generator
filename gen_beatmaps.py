@@ -6,7 +6,7 @@ import numpy as np
 import json
 import random
 import zipfile
-
+import sys
 
 # 键形列表
 jx_list = [i for i in range(1, 16)]
@@ -57,11 +57,11 @@ def get_audio_features(x, sr, bpm, position, offset):
 # audio_file = "春分.mp3"
 
 
-BPM = 122
-offset = 0
-song_name = "惊蛰"
-artist = "音阙诗听 / 王梓钰"
-audio_file = "惊蛰.mp3"
+song_name = sys.argv[1]
+artist = sys.argv[2]
+audio_file = sys.argv[3]
+BPM = int(sys.argv[4])
+offset = float(sys.argv[5])
 
 x, sr = librosa.load(audio_file, sr=20000)
 print(x.shape)
