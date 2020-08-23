@@ -35,9 +35,9 @@ for i in  os.listdir(os.path.join(sys.path[0],"Data")):
                     shutil.move(levelfilepath,dirpath)
                     for file2 in os.listdir(path2):
                         filepath2 = os.path.join(path2,file2)
-                        if(file2.endswith(".mc")):
-                            os.remove(filepath2)
-                        else:
+                        if(file2.endswith(".ogg") or file2.endswith(".mp3")):
                             shutil.move(filepath2,dirpath)
+                        else:
+                            os.remove(filepath2)
 
                     

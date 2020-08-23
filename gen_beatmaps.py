@@ -62,6 +62,13 @@ artist = sys.argv[2]
 audio_file = sys.argv[3]
 BPM = int(sys.argv[4])
 offset = float(sys.argv[5])
+try:
+    creator = sys.argv[6]
+    version = sys.argv[7]
+except:
+    creator = "AI"
+    version = "Generated with Artificial Intelligence"
+
 
 x, sr = librosa.load(audio_file, sr=20000)
 print(x.shape)
@@ -87,8 +94,8 @@ print(len(X))
 
 mc_data = {
     "meta": {
-        "creator": "nladuo",
-        "version": "Generated with Artificial Intelligence",
+        "creator": creator,
+        "version": version,
         "mode": 0,
         "time": int(time.time()),
         "song": {
@@ -125,20 +132,20 @@ last_note = {
 }
 
 
-encoder_ln1 = torch.load("checkpoints/encoder_ln1.pth").to(device)
-encoder_ln2 = torch.load("checkpoints/encoder_ln2.pth").to(device)
-ln_cls_layer = torch.load("checkpoints/ln_cls_layer.pth").to(device)
+encoder_ln1 = torch.load("checkpoints/encoder_ln1.pth",map_location=device)
+encoder_ln2 = torch.load("checkpoints/encoder_ln2.pth",map_location=device)
+ln_cls_layer = torch.load("checkpoints/ln_cls_layer.pth",map_location=device)
 
-ln_encoder = torch.load("checkpoints/ln_encoder.pth").to(device)
-ln_decoder = torch.load("checkpoints/ln_decoder.pth").to(device)
+ln_encoder = torch.load("checkpoints/ln_encoder.pth",map_location=device)
+ln_decoder = torch.load("checkpoints/ln_decoder.pth",map_location=device)
 
 
-encoder_beat1 = torch.load("checkpoints/encoder_beat1.pth").to(device)
-encoder_beat2 = torch.load("checkpoints/encoder_beat2.pth").to(device)
-beat_cls_layer = torch.load("checkpoints/beat_cls_layer.pth").to(device)
+encoder_beat1 = torch.load("checkpoints/encoder_beat1.pth",map_location=device)
+encoder_beat2 = torch.load("checkpoints/encoder_beat2.pth",map_location=device)
+beat_cls_layer = torch.load("checkpoints/beat_cls_layer.pth",map_location=device)
 
-beat_encoder = torch.load("checkpoints/beat_encoder.pth").to(device)
-beat_decoder = torch.load("checkpoints/beat_decoder.pth").to(device)
+beat_encoder = torch.load("checkpoints/beat_encoder.pth",map_location=device)
+beat_decoder = torch.load("checkpoints/beat_decoder.pth",map_location=device)
 
 
 max_length = len(X)
@@ -298,9 +305,9 @@ notes.append(last_note)
 
 mc_data["note"] = notes
 
-with open("generated_with_ai.mc", "w") as f:
+with open(song_name +".mc", "w") as f:
     json.dump(mc_data, f)
 
-with zipfile.ZipFile("generated-with-ai.mcz", 'w') as z:
-    z.write("generated_with_ai.mc")
+with zipfile.ZipFile(song_name + ".mcz", 'w') as z:
+    z.write(song_name + ".mc")
     z.write(audio_file)
